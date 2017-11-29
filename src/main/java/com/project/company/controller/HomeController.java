@@ -6,6 +6,7 @@ import com.project.company.model.Employee;
 import com.project.company.model.PersonInPosition;
 import com.project.company.repository.PersonRepository;
 import com.project.company.repository.PositionRepository;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,9 @@ zwracanie listy wszystkich pracowników z możliwością filtrowania po adresie 
 zwracanie listy wszystkich stanowisk razem z ilością pracowników przypisanych do nich
 usuwanie danego pracownika z listy*/
 
+//baza danych z pliku
+//interfejs
+
 @Controller
 public class HomeController {
 
@@ -33,18 +37,18 @@ public class HomeController {
     @Autowired
     private PositionRepository positionRepository;
 
-    private static final org.apache.log4j.Logger logger = Logger.getLogger(HomeController.class);
+    //private static final Logger logger = Logger.getLogger(HomeController.class);
 
     @RequestMapping(value = {"/persons"}, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity showPersons() {
-      /*  List<Employee> employee = new ArrayList<>();
+        List<Employee> employee = new ArrayList<>();
         for (Position ps : positionRepository.findAll()) {
             for (Person p : personRepository.findAll()) {
-                if (p.getId() == ps.getId())
+                if (p.getPosition().getId() == ps.getId())
                     employee.add(new Employee(p.getName(), p.getSurname(), p.getEmail(), ps.getPosition()));
             }
-        }*/
-        return new ResponseEntity(personRepository.findAll(), HttpStatus.OK);
+        }// return new ResponseEntity(personRepository.findAll(), HttpStatus.OK);
+        return new ResponseEntity(employee, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
@@ -70,7 +74,7 @@ public class HomeController {
             newPerson.setEmail(employee.getEmail());
             personRepository.save(newPerson);
         } catch (Exception e) {
-            logger.error("Error message", e);
+           // logger.error("Error message", e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity(HttpStatus.OK);
@@ -108,10 +112,12 @@ public class HomeController {
                 personInPositions.add(pip);
             }
         } catch (Exception ex) {
-            logger.error("Error message", ex);
+            //logger.error("Error message", ex);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity(personInPositions, HttpStatus.OK);
     }
+
+    
 }
